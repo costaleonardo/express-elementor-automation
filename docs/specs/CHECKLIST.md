@@ -16,12 +16,12 @@
 - [x] Initialize ESLint and Prettier configuration
 
 ### Dependencies Installation
-- [ ] Install Express.js for webhook server
-- [ ] Install `pdf-parse` for PDF text extraction
-- [ ] Install `mammoth` for DOCX processing
-- [ ] Install `axios` for HTTP requests
-- [ ] Install `dotenv` for environment configuration
-- [ ] Install development dependencies (nodemon, jest, etc.)
+- [x] Install Express.js for webhook server
+- [x] Install `pdf-parse` for PDF text extraction
+- [x] Install `mammoth` for DOCX processing
+- [x] Install `axios` for HTTP requests
+- [x] Install `dotenv` for environment configuration
+- [x] Install development dependencies (nodemon, jest, etc.)
 
 ### Environment Configuration
 - [ ] Create `.env.example` template
