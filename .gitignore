@@ -162,8 +162,6 @@ attachments/
 uploads/
 
 # Project-specific exclusions
-docs/
-/docs
 
 # Configuration files with sensitive data
 config/production.json

@@ -1,0 +1,18 @@
+{
+  "name": "contentflow-mvp",
+  "version": "1.0.0",
+  "description": "ContentFlow MVP - Automation system that creates WordPress content from Asana tasks with file attachments",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "format": "prettier --write src/**/*.js"
+  },
+  "keywords": ["asana", "wordpress", "automation", "webhook", "content"],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}
