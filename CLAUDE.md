@@ -11,30 +11,30 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Common Development Tasks
 ```bash
 # Development with auto-reload
-pnpm run dev
+npm run dev
 
 # Production start
-pnpm start
+npm start
 
 # Run all tests
-pnpm test
+npm test
 
 # Run specific test file
-pnpm test -- tests/services/asana.test.js
+npm test -- tests/services/asana.test.js
 
 # Lint code
-pnpm run lint
-pnpm run lint:fix
+npm run lint
+npm run lint:fix
 
 # Format code with Prettier
-pnpm run format
+npm run format
 
 # Debug mode (when implemented)
-DEBUG=contentflow:* pnpm run dev
+DEBUG=contentflow:* npm run dev
 ```
 
 ### Package Management
-- **Package Manager**: Uses pnpm (not npm/yarn)
+- **Package Manager**: Uses npm (standard package manager)
 - **Module System**: ES modules (`"type": "module"` in package.json)
 - **Entry Point**: `src/index.js`
 
@@ -113,3 +113,24 @@ Required environment variables (see `.env.example`):
 - **API Rate Limits**: Both Asana and WordPress APIs have rate limiting
 - **Webhook Security**: Always verify Asana webhook signatures
 - **ACF Dependencies**: WordPress site must have ACF Pro plugin and configured field groups
+
+## Project Status
+
+**Current State**: Early development phase - core architecture documented but implementation in progress.
+- Documentation complete (README.md, PRD.md, CLAUDE.md)
+- Package structure defined with dependencies
+- Source code implementation pending
+
+## Testing Strategy
+
+Once implemented, run tests with:
+```bash
+# All tests
+npm test
+
+# Specific test file
+npm test -- tests/services/asana.test.js
+
+# Tests with coverage (when configured)
+npm run test:coverage
+```

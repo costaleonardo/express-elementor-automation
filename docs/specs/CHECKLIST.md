@@ -24,15 +24,15 @@
 - [x] Install development dependencies (nodemon, jest, etc.)
 
 ### Environment Configuration
-- [ ] Create `.env.example` template
-- [ ] Set up environment variables structure:
-  - [ ] `ASANA_ACCESS_TOKEN`
-  - [ ] `ASANA_WEBHOOK_SECRET`
-  - [ ] `WORDPRESS_API_URL`
-  - [ ] `WORDPRESS_USERNAME`
-  - [ ] `WORDPRESS_APP_PASSWORD`
-  - [ ] `PORT`
-  - [ ] `NODE_ENV`
+- [x] Create `.env.example` template
+- [x] Set up environment variables structure:
+  - [x] `ASANA_ACCESS_TOKEN`
+  - [x] `ASANA_WEBHOOK_SECRET`
+  - [x] `WORDPRESS_API_URL`
+  - [x] `WORDPRESS_USERNAME`
+  - [x] `WORDPRESS_APP_PASSWORD`
+  - [x] `PORT`
+  - [x] `NODE_ENV`
 
 ---
 
