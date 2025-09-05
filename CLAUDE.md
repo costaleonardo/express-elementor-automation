@@ -6,59 +6,131 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **ContentFlow MVP** - An automation system that creates WordPress content from Asana tasks with file attachments. This is a Node.js-based webhook system that processes PDF/DOCX documents and creates WordPress draft posts via REST API.
 
-## Architecture Components
+## Development Commands
 
-Based on the PRD, the system consists of:
+### Common Development Tasks
+```bash
+# Development with auto-reload
+npm run dev
 
-- **Webhook Server**: Node.js/Express application handling Asana webhooks
-- **Task Processor**: Handles Asana task data and attachment retrieval  
-- **File Processor**: PDF and DOCX text extraction using pdf-parse and mammoth
-- **WordPress API Client**: REST API integration for post creation
-- **Simple Dashboard**: Basic status monitoring
+# Production start
+npm start
 
-## Technology Stack
+# Run all tests
+npm test
 
-- **Backend**: Node.js, Express
-- **File Processing**: pdf-parse (PDF), mammoth (DOCX) 
-- **WordPress Integration**: WordPress REST API
-- **Hosting**: Cloud deployment (Heroku/DigitalOcean)
+# Run specific test file
+npm test -- tests/services/asana.test.js
 
-## Data Flow
+# Lint code
+npm run lint
+npm run lint:fix
 
-1. Asana webhook triggers on task creation in designated project
-2. Server retrieves task data and attachments via Asana API
-3. Downloads and validates supported files (PDF/DOCX, max 10MB)
-4. Extracts text content from documents
-5. Maps content to WordPress post structure with ACF fields
-6. Creates WordPress draft post
-7. Logs success/failure status
+# Format code with Prettier
+npm run format
 
-## Content Mapping
+# Debug mode (when implemented)
+DEBUG=contentflow:* npm run dev
+```
 
-- **Task name** → Post Title (primary)
-- **First line/heading from document** → Post Title (fallback)
-- **Full text content** → Post Content (ACF field)
-- **First paragraph** → Post Excerpt (ACF field)
-- **Task description** → Post notes/meta
-- **Task creation timestamp** → Post date
+### Package Management
+- **Package Manager**: Uses npm (standard package manager)
+- **Module System**: ES modules (`"type": "module"` in package.json)
+- **Entry Point**: `src/index.js`
 
-## External Dependencies
+## Architecture & Code Structure
 
-- **Asana API**: Personal Access Token with webhook and task read permissions
-- **WordPress**: ACF Pro plugin, custom post type with ACF field group, REST API enabled, application passwords configured
-- **File Processing**: Supports PDF (text-based, no OCR) and DOCX only
+### High-Level Architecture
+The system follows an event-driven architecture with webhook processing:
 
-## MVP Limitations
+```
+Asana Webhook → Express Server → Processing Pipeline → WordPress API
+```
 
-- Single file processing only (first supported document)
-- Text extraction only (no images, OCR, or structured parsing)
-- Draft posts only (no auto-publishing)
-- Tasks without attachments are logged but not processed
-- No retroactive processing (new tasks only)
-- Basic error handling and logging
+### Core Processing Pipeline
+1. **Webhook Receipt** (`/webhook/asana` endpoint)
+2. **Task Data Fetching** (Asana API integration)
+3. **File Download & Validation** (PDF/DOCX, 10MB max)
+4. **Content Extraction** (pdf-parse, mammoth libraries)
+5. **Content Mapping** (Task → WordPress post structure)
+6. **WordPress Post Creation** (REST API with ACF fields)
 
-## Success Criteria
+### Project Structure
+```
+src/
+  ├── controllers/     # HTTP request handlers (webhook, health endpoints)
+  ├── services/        # Core business logic
+  │   ├── asana/       # Asana API client and task processing
+  │   ├── processors/  # File processing (PDF, DOCX)
+  │   └── wordpress/   # WordPress API client and post creation
+  ├── utils/          # Shared utilities and helpers
+  ├── middleware/     # Express middleware (auth, validation, logging)
+  └── index.js        # Application entry point and server setup
+```
 
-- 90%+ processing success rate for supported file types
-- ≤2 minutes processing time from task creation to WordPress draft
-- Graceful handling of tasks without attachments
+### Key Integration Points
+- **Asana Integration**: Personal Access Token authentication, webhook signature verification
+- **WordPress Integration**: Application passwords, ACF Pro field mapping
+- **File Processing**: Stream-based processing for memory efficiency with large files
+
+## Content Mapping Strategy
+
+**Critical mapping logic** (affects all content creation):
+- **Task name** → Post Title (primary source)
+- **Document first line/heading** → Post Title (fallback)
+- **Full document content** → ACF content field
+- **First paragraph** → ACF excerpt field
+- **Task metadata** → WordPress post meta
+
+## Environment Configuration
+
+Required environment variables (see `.env.example`):
+- `ASANA_ACCESS_TOKEN` - Asana API authentication
+- `ASANA_WEBHOOK_SECRET` - Webhook signature verification
+- `WORDPRESS_API_URL` - WordPress site REST API endpoint
+- `WORDPRESS_USERNAME` & `WORDPRESS_APP_PASSWORD` - WordPress authentication
+
+## MVP Constraints
+
+**Explicitly excluded features** (do not implement):
+- Multi-file processing (single file only)
+- Image/OCR processing (text extraction only)
+- Auto-publishing (drafts only)
+- Retroactive processing (new tasks only)
+- Advanced error recovery
+
+## Error Handling Patterns
+
+- **No attachments**: Log and skip (no error)
+- **Unsupported files**: Log error, continue processing
+- **API failures**: Implement retry with exponential backoff
+- **Processing timeouts**: Configurable limits, graceful failure
+
+## Development Notes
+
+- **File Cleanup**: Temporary files must be cleaned up after processing
+- **Memory Management**: Stream processing for large files to avoid memory issues
+- **API Rate Limits**: Both Asana and WordPress APIs have rate limiting
+- **Webhook Security**: Always verify Asana webhook signatures
+- **ACF Dependencies**: WordPress site must have ACF Pro plugin and configured field groups
+
+## Project Status
+
+**Current State**: Early development phase - core architecture documented but implementation in progress.
+- Documentation complete (README.md, PRD.md, CLAUDE.md)
+- Package structure defined with dependencies
+- Source code implementation pending
+
+## Testing Strategy
+
+Once implemented, run tests with:
+```bash
+# All tests
+npm test
+
+# Specific test file
+npm test -- tests/services/asana.test.js
+
+# Tests with coverage (when configured)
+npm run test:coverage
+```
